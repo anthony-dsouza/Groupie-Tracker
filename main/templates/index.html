@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/page.css">
     <title>Groupie Tracker</title>
 </head>
 <body>
-    <div>
-
-
+    <div class="container">
+    {{range .}}
+    <div class="child">
+        <img src={{.Image}} alt="{{.Name}}" >
+        <h2>{{.Name}}</h2>
+    </div>
+    {{end}}
     </div>
 </body>
-</html>
+</html> 
