@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/profile.css">
+    <title>Groupie Tracker</title>
+</head>
+<body>
+    <header>
+        <a class="logo" href="/">Artists</a>
+        <form action="/search" method="GET">
+          <input
+            autofocus
+            class="search-input"
+            value=""
+            placeholder="Search Artist"
+            type="search"
+            name="q"
+          />
+        </form>
+      </header>
+    <div class="container">
+      <div class="child">
+        <img src={{.Image}} alt="{{.Name}}" title="{{.Name}}" name="img">
+      </div>
+      <div class="child"> 
+              <div>
+                <label for="">Name</label>
+                <input value="{{.Name}}" name="name"/>
+              </div>
+              <div>
+                <label for="">Members</label>
+                <textarea value="{{.Members}}" name="members">{{.Members}}</textarea>
+              </div>
+              <div>
+                <label for="">Creation Date</label>
+                <input value="{{.CreationDate}}" name="creationDate"/>
+              </div>
+              <div>
+                <label for="">First Album</label>
+                <input value="{{.FirstAlbum}}" name="FirstAlbum"/>
+              </div>
+              <div>
+                <table>
+                  <tr>
+                    <th>Locations</th>
+                    <th>Dates</th>
+                  </tr>
+                  {{range $key, $value := .LocationsDates.LocationsDates}}
+                  <tr>
+                  <td>{{$key}}</td>
+                  <td></td>
+                  </tr>
+                  {{range $value}}
+                  <tr>
+                    <td></td>
+                    <td>{{.}}</td>
+                  </tr>
+                  {{end}}
+                  {{end}}
+                </table>
+              </div>
+      </div>
+    </div>
+</body>
+</html> 

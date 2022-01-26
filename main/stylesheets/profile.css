@@ -1,0 +1,37 @@
+header {
+    width: 98%;
+    position: fixed;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+.logo {
+    background-color:rgb(12, 12, 12);
+    color: ghostwhite;
+}
+
+.logo:hover {
+    color: gold;
+}
+
+.container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.child {
+    padding: 50px;
+}
+
+.child div {
+    margin-top: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+div label {
+    margin-right: 20px;
+}

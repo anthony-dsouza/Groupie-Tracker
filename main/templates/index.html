@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="stylesheets/page.css">
+    <link rel="stylesheet" href="stylesheets/index.css">
     <title>Groupie Tracker</title>
 </head>
 <body>
+    <header>
+        <a class="logo" href="/">Artists</a>
+        <form action="/search" method="GET">
+          <input
+            autofocus
+            class="search-input"
+            value=""
+            placeholder="Search Artist"
+            type="search"
+            name="q"
+          />
+        </form>
+      </header>
     <div class="container">
     {{range .}}
     <div class="child">
-        <img src={{.Image}} alt="{{.Name}}" >
-        <h2>{{.Name}}</h2>
+        <a href="/profile?q={{.Id}}"><img src={{.Image}} alt="{{.Name}}" title="{{.Name}}"></a>
     </div>
     {{end}}
     </div>
