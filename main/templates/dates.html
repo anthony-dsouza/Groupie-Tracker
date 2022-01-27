@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheets/index.css">
+    <title>Groupie Tracker</title>
+</head>
+<body>
+    <header>
+        <a class="logo" href="/">Artists</a>
+        <form action="/search" method="GET">
+          <input
+            autofocus
+            class="search-input"
+            value=""
+            placeholder="Search Artist"
+            type="search"
+            name="q"
+          />
+        </form>
+      </header>
+    <div class="container">
+        <div class="child">
+            <table>
+                <tr>
+                    <th>Dates</th>
+                </tr>
+                {{range .Dates}}
+                <tr>
+                    <td>{{.}}</td>
+                </tr>
+                {{end}}
+            </table>
+        </div>
+    </div>
+</body>
+</html> 

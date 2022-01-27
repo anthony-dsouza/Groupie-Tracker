@@ -40,7 +40,13 @@
               </div>
               <div>
                 <label for="">First Album</label>
-                <input value="{{.FirstAlbum}}" name="FirstAlbum"/>
+                <input value="{{.FirstAlbum}}" name="firstAlbum"/>
+              </div>
+              <div>
+                <a href="/locations?l={{.Id}}"><label for="">Locations</label></a>
+              </div>
+              <div>
+                <a href="/dates?d={{.Id}}"><label for="">Concert Dates</label></a>
               </div>
               <div>
                 <table>

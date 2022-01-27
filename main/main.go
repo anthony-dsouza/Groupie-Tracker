@@ -21,9 +21,9 @@ type Artist struct {
 	CreationDate   int      `json:"creationDate"`
 	LocationsDates Relation
 	FirstAlbum     string `json:"firstAlbum"`
-	// Locations    string   `json:"locations"`
-	// ConcertDates string   `json:"concertDates"`
-	// Relations    string   `json:"relations"`
+	Locations      string `json:"locations"`
+	ConcertDates   string `json:"concertDates"`
+	Relations      string `json:"relations"`
 }
 
 type Relation struct {
@@ -31,8 +31,21 @@ type Relation struct {
 	LocationsDates map[string][]string `json:"datesLocations"`
 }
 
+type Locations struct {
+	Id        int      `json:"id"`
+	Locations []string `json:"locations"`
+	Dates     string   `json:"dates"`
+}
+
+type Dates struct {
+	Id    int      `json:"id"`
+	Dates []string `json:"dates"`
+}
+
 var artistsObject []Artist
 var relationObject Relation
+var locationsObject Locations
+var datesObject Dates
 
 func returnAllArtists(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArtists")
@@ -109,9 +122,9 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(relationData))
-
 	json.Unmarshal(relationData, &relationObject)
+
+	// assign data to the profile of type Artist using idQuery
 
 	for i, x := range artistsObject {
 		if x.Id == idQuery {
@@ -131,10 +144,84 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func locationsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: locationsHandler")
+
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	params := u.Query()
+	locationsQuery := params.Get("l")
+
+	locations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations/" + locationsQuery)
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+
+	locationsData, err := ioutil.ReadAll(locations.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	json.Unmarshal(locationsData, &locationsObject)
+
+	t, err := template.ParseFiles("templates/locations.html")
+	if err != nil {
+		http.Error(w, "404 Status Not Found", 404)
+		return
+	}
+	err = t.Execute(w, locationsObject)
+	if err != nil {
+		http.Error(w, "500 Internal Server Error", 500)
+	}
+}
+
+func datesHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: datesHandler")
+
+	u, err := url.Parse(r.URL.String())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	params := u.Query()
+	datesQuery := params.Get("d")
+
+	dates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates/" + datesQuery)
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+
+	datesData, err := ioutil.ReadAll(dates.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	json.Unmarshal(datesData, &datesObject)
+
+	t, err := template.ParseFiles("templates/dates.html")
+	if err != nil {
+		http.Error(w, "404 Status Not Found", 404)
+		return
+	}
+	err = t.Execute(w, datesObject)
+	if err != nil {
+		http.Error(w, "500 Internal Server Error", 500)
+	}
+}
+
 func handleRequests() {
 	http.HandleFunc("/", returnAllArtists)
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/profile", profileHandler)
+	http.HandleFunc("/locations", locationsHandler)
+	http.HandleFunc("/dates", datesHandler)
 	fs := http.FileServer(http.Dir("stylesheets/"))
 	http.Handle("/stylesheets/",
 		http.StripPrefix("/stylesheets/", fs))
