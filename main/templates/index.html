@@ -24,7 +24,7 @@
     <div class="container">
     {{range .}}
     <div class="child">
-        <a href="/profile?q={{.Id}}"><img src={{.Image}} alt="{{.Name}}" title="{{.Name}}"></a>
+        <a href="/profile?q={{.Id}}"><img src={{.Image}} alt="{{.Name}}" title="{{.Name}}" loading="lazy"></a>
     </div>
     {{end}}
     </div>

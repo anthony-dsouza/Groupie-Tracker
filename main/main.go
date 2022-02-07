@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Artist struct {
@@ -49,6 +50,11 @@ var datesObject Dates
 
 func returnAllArtists(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArtists")
+
+	if r.URL.Path != "/" {
+		http.Error(w, "400 Bad Request", 400)
+		return
+	}
 
 	t, err := template.ParseFiles("templates/index.html")
 	if err != nil {
@@ -217,6 +223,7 @@ func datesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleRequests() {
+	a := time.Now()
 	http.HandleFunc("/", returnAllArtists)
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/profile", profileHandler)
@@ -226,23 +233,30 @@ func handleRequests() {
 	http.Handle("/stylesheets/",
 		http.StripPrefix("/stylesheets/", fs))
 	fmt.Println("Server Running")
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	fmt.Println(time.Since(a))
+	err := http.ListenAndServe(":3000", nil)
+	if err != nil {
+		log.Fatal("500 Internal Server Error")
+	}
 }
 
 func main() {
-	artists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 
-	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
-	}
+	go func() {
+		artists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 
-	artistsData, err := ioutil.ReadAll(artists.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
+		if err != nil {
+			fmt.Print(err.Error())
+			os.Exit(1)
+		}
 
-	json.Unmarshal(artistsData, &artistsObject)
+		artistsData, err := ioutil.ReadAll(artists.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		json.Unmarshal(artistsData, &artistsObject)
+	}()
 
 	handleRequests()
 
